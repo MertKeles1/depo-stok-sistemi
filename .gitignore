@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.spec
+
+# Virtual environment
+depo_sanal/
+
+# Database
+*.db
+
+# VS Code settings
+.vscode/
