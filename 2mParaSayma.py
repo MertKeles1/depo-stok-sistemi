@@ -14,29 +14,25 @@ class DepoStokSistemi:
         
         # Uygulama dizini ve veritabanı yolunu belirle
         if getattr(sys, 'frozen', False):
-            # PyInstaller ile paketlenmiş uygulama için
             self.application_path = os.path.dirname(sys.executable)
         else:
-            # Normal Python betiği için
             self.application_path = os.path.dirname(os.path.abspath(__file__))
         
         self.db_path = os.path.join(self.application_path, "depo_stok.db")
         
-        # Veritabanı bağlantısını oluştur
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
 
-                # Tema ve renk ayarları
+        # Tema ve renk ayarları
         self.style = ttk.Style()
-        self.style.theme_use('clam')  # 'clam', 'alt', 'default', 'classic' temalarından birini kullanabilirsiniz
+        self.style.theme_use('clam')
         
         # Ana renkler
-        self.primary_color = "#4a6984"  # Koyu mavi/gri
+        self.primary_color = "#4a6984"  # Koyu gri
         self.secondary_color = "#f0f0f0"  # Açık gri
         self.accent_color = "#2e8b57"  # Deniz yeşili
         self.warning_color = "#e74c3c"  # Kırmızı
         
-        # Tabloları oluştur
         self.tablolari_olustur()
         
         # Ana çerçeve oluştur
@@ -54,7 +50,7 @@ class DepoStokSistemi:
         self.root.protocol("WM_DELETE_WINDOW", self.kapat)
     
     def tablolari_olustur(self):
-        # Ürünler tablosunu oluştur
+        # Ürünler tablosu
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS urunler (
             id INTEGER PRIMARY KEY,
@@ -67,7 +63,7 @@ class DepoStokSistemi:
         )
         """)
         
-        # Satışlar tablosunu oluştur
+        # Satışlar tablosu
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS satislar (
             id INTEGER PRIMARY KEY,
@@ -80,33 +76,6 @@ class DepoStokSistemi:
             FOREIGN KEY (urun_id) REFERENCES urunler (id)
         )
         """)
-        
-        # Veritabanı boşsa örnek veriler ekle
-        self.veritabani_ilk_kurulum_yap()
-        
-        self.conn.commit()
-
-    def veritabani_ilk_kurulum_yap(self):
-        # Veritabanında hiç ürün yoksa demo veriler ekle
-        self.cursor.execute("SELECT COUNT(*) FROM urunler")
-        urun_sayisi = self.cursor.fetchone()[0]
-        
-        if urun_sayisi == 0:
-            # Demo ürünler ekle
-            urunler = [
-                ('URN001', 'Samsung Galaxy S21', 'Telefon', 8999.99, 10, self.turkce_tarih()),
-                ('URN002', 'Apple iPhone 13', 'Telefon', 14999.99, 5, self.turkce_tarih()),
-                ('URN003', 'Lenovo ThinkPad X1', 'Bilgisayar', 19999.99, 3, self.turkce_tarih()),
-                ('URN004', 'Sony 55" 4K TV', 'Televizyon', 12499.99, 7, self.turkce_tarih()),
-                ('URN005', 'Bosch Bulaşık Makinesi', 'Beyaz Eşya', 7999.99, 4, self.turkce_tarih())
-            ]
-            
-            self.cursor.executemany("""
-            INSERT INTO urunler (urun_kodu, urun_adi, kategori, birim_fiyat, stok_miktari, eklenme_tarihi)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """, urunler)
-            
-            self.conn.commit()
 
     def turkce_tarih(self):
         ay_isimleri = {

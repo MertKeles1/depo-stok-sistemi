@@ -1,3 +1,14 @@
-tkinter
-sqlite3
-pyinstaller
+# Bu proje sadece Python'un standart kütüphanelerini kullanmaktadır.
+# Herhangi bir ek paket gerektirmez.
+# Python >= 3.x 
+
+# Uygulama Gereksinimleri
+# Standart Kütüphaneler (Python ile birlikte gelir):
+# - sqlite3
+# - tkinter
+# - datetime
+# - os
+# - sys
+
+# Geliştirme Araçları
+pyinstaller==6.4.0  # Uygulamayı çalıştırılabilir dosyaya dönüştürmek için 
